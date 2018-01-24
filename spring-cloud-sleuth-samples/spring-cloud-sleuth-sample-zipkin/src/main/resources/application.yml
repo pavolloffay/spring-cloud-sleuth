@@ -15,4 +15,4 @@ spring:
 sample:
   zipkin:
     # When enabled=false, traces log to the console. Comment to send to zipkin
-    enabled: false
+    enabled: true

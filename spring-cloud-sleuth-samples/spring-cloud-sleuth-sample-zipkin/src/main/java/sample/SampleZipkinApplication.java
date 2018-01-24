@@ -16,6 +16,13 @@
 
 package sample;
 
+import com.uber.jaeger.Tracer.Builder;
+import com.uber.jaeger.metrics.Metrics;
+import com.uber.jaeger.metrics.NullStatsReporter;
+import com.uber.jaeger.metrics.StatsFactoryImpl;
+import com.uber.jaeger.reporters.RemoteReporter;
+import com.uber.jaeger.samplers.ConstSampler;
+import com.uber.jaeger.senders.HttpSender;
 import zipkin2.Span;
 import zipkin2.reporter.Reporter;
 import org.springframework.boot.SpringApplication;
@@ -34,6 +41,15 @@ public class SampleZipkinApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SampleZipkinApplication.class, args);
+	}
+
+	@Bean
+	public io.opentracing.Tracer jaegerTracer() {
+		Builder builder = new Builder("spring-boot",
+				new RemoteReporter(new HttpSender("http://localhost:14268/api/traces"), 10,
+						65000, new Metrics(new StatsFactoryImpl(new NullStatsReporter()))),
+				new ConstSampler(true));
+		return builder.build();
 	}
 
 	@Bean

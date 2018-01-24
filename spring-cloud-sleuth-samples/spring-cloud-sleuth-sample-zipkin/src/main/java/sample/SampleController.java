@@ -47,6 +47,13 @@ ApplicationListener<ServletWebServerInitializedEvent> {
 	private SampleBackground controller;
 	private Random random = new Random();
 	private int port;
+	@Autowired
+	private io.opentracing.Tracer otTracer;
+
+	@RequestMapping("/ot")
+	public String otTracer() {
+		return otTracer.getClass().getName().toString();
+	}
 
 	@RequestMapping("/")
 	public String hi() throws InterruptedException {
